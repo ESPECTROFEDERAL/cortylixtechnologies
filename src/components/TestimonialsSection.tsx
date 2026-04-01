@@ -26,23 +26,19 @@ const TestimonialsSection = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="section-padding relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,hsl(var(--secondary)/0.05),transparent_50%)]" />
-      
-      <div className="container mx-auto relative z-10">
+    <section className="py-24 md:py-32 px-4">
+      <div className="container mx-auto">
         <div className="text-center mb-16">
-          <span className="inline-block text-secondary text-sm font-semibold tracking-widest uppercase mb-3">Testimonials</span>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             {t('testimonialsTitle')}
           </h2>
-          <div className="w-20 h-1 bg-secondary mx-auto mt-4 rounded-full" />
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((item, i) => (
             <div
               key={i}
-              className="glass rounded-2xl p-8 hover:border-secondary/40 hover:-translate-y-2 transition-all duration-500 relative group"
+              className="glass rounded-2xl p-8 hover:border-secondary/30 hover:-translate-y-2 transition-all duration-500 relative group"
             >
               <Quote className="w-10 h-10 text-secondary/10 absolute top-6 right-6 group-hover:text-secondary/20 transition-colors" />
               <div className="flex gap-1 mb-5">

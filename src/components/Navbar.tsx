@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X, Globe, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -44,17 +44,17 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'glass shadow-lg shadow-background/50' : 'bg-transparent'
+        isScrolled ? 'bg-background/80 backdrop-blur-xl border-b border-border/30' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 md:h-20 px-4">
         {/* Logo */}
         <button onClick={() => scrollTo('hero')} className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center font-display font-bold text-secondary-foreground text-lg group-hover:shadow-lg group-hover:shadow-secondary/20 transition-shadow">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center font-display font-bold text-secondary-foreground text-sm">
             C
           </div>
-          <span className="font-display font-bold text-lg text-foreground hidden sm:inline">
-            CORTYLIX<span className="text-secondary"> TECHNOLOGIES</span>
+          <span className="font-display font-bold text-foreground hidden sm:inline tracking-tight">
+            CORTYLIX <span className="text-secondary">TECHNOLOGIES</span>
           </span>
         </button>
 
@@ -64,7 +64,7 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
             <button
               key={i}
               onClick={link.action || (() => scrollTo(link.id!))}
-              className="text-muted-foreground hover:text-secondary transition-colors text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full"
+              className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
             >
               {link.label}
             </button>
@@ -75,14 +75,14 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setLanguage(language === 'en' ? 'sw' : 'en')}
-            className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-secondary transition-colors px-3 py-2 rounded-lg border border-border/50 hover:border-secondary/30 backdrop-blur-sm"
+            className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-2 rounded-full border border-border/30 hover:border-border/60"
           >
             <Globe className="w-3.5 h-3.5" />
             {language === 'en' ? 'SW' : 'EN'}
           </button>
           <Button
             onClick={onQuoteOpen}
-            className="hidden md:inline-flex bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold rounded-xl"
+            className="hidden md:inline-flex bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold rounded-full text-sm px-5"
             size="sm"
           >
             {t('requestQuote')}
@@ -98,7 +98,7 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
 
       {/* Mobile Menu */}
       {isMobileOpen && (
-        <div className="md:hidden glass border-t border-border/50 animate-fade-in">
+        <div className="md:hidden bg-background/95 backdrop-blur-xl border-t border-border/30 animate-fade-in">
           <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
             {navLinks.map((link, i) => (
               <button
@@ -111,7 +111,7 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
             ))}
             <Button
               onClick={() => { onQuoteOpen(); setIsMobileOpen(false); }}
-              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 w-full mt-2 rounded-xl"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 w-full mt-2 rounded-full"
             >
               {t('requestQuote')}
             </Button>

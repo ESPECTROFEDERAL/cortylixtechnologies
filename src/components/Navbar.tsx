@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface NavbarProps {
   onQuoteOpen: () => void;
@@ -11,6 +12,8 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -19,12 +22,20 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
   }, []);
 
   const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
     setIsMobileOpen(false);
   };
 
   const navLinks = [
     { label: t('home'), id: 'hero' },
+    { label: t('aboutTitle'), action: () => { navigate('/about'); setIsMobileOpen(false); } },
     { label: t('services'), id: 'services' },
     { label: t('portfolio'), id: 'portfolio' },
     { label: t('contact'), id: 'contact' },
@@ -33,13 +44,13 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'glass shadow-lg' : 'bg-transparent'
+        isScrolled ? 'glass shadow-lg shadow-background/50' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 md:h-20 px-4">
         {/* Logo */}
-        <button onClick={() => scrollTo('hero')} className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center font-display font-bold text-secondary-foreground text-lg group-hover:glow transition-shadow">
+        <button onClick={() => scrollTo('hero')} className="flex items-center gap-2.5 group">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center font-display font-bold text-secondary-foreground text-lg group-hover:shadow-lg group-hover:shadow-secondary/20 transition-shadow">
             C
           </div>
           <span className="font-display font-bold text-lg text-foreground hidden sm:inline">
@@ -49,11 +60,11 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
+          {navLinks.map((link, i) => (
             <button
-              key={link.id}
-              onClick={() => scrollTo(link.id)}
-              className="text-muted-foreground hover:text-secondary transition-colors text-sm font-medium"
+              key={i}
+              onClick={link.action || (() => scrollTo(link.id!))}
+              className="text-muted-foreground hover:text-secondary transition-colors text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all hover:after:w-full"
             >
               {link.label}
             </button>
@@ -64,14 +75,14 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setLanguage(language === 'en' ? 'sw' : 'en')}
-            className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-secondary transition-colors px-2 py-1 rounded-md border border-border/50 hover:border-secondary/30"
+            className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-secondary transition-colors px-3 py-2 rounded-lg border border-border/50 hover:border-secondary/30 backdrop-blur-sm"
           >
             <Globe className="w-3.5 h-3.5" />
             {language === 'en' ? 'SW' : 'EN'}
           </button>
           <Button
             onClick={onQuoteOpen}
-            className="hidden md:inline-flex bg-secondary text-secondary-foreground hover:bg-secondary/90 glow-sm font-semibold"
+            className="hidden md:inline-flex bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold rounded-xl"
             size="sm"
           >
             {t('requestQuote')}
@@ -89,10 +100,10 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
       {isMobileOpen && (
         <div className="md:hidden glass border-t border-border/50 animate-fade-in">
           <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
-            {navLinks.map((link) => (
+            {navLinks.map((link, i) => (
               <button
-                key={link.id}
-                onClick={() => scrollTo(link.id)}
+                key={i}
+                onClick={link.action || (() => scrollTo(link.id!))}
                 className="text-left text-foreground hover:text-secondary transition-colors py-2 text-lg font-medium"
               >
                 {link.label}
@@ -100,7 +111,7 @@ const Navbar = ({ onQuoteOpen }: NavbarProps) => {
             ))}
             <Button
               onClick={() => { onQuoteOpen(); setIsMobileOpen(false); }}
-              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 w-full mt-2"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 w-full mt-2 rounded-xl"
             >
               {t('requestQuote')}
             </Button>

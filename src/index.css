@@ -53,7 +53,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', sans-serif;
   }
 
@@ -64,7 +64,7 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary to-[hsl(220,78%,50%)];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary via-[hsl(200,90%,55%)] to-[hsl(220,78%,50%)];
   }
 
   .glow {
@@ -80,6 +80,6 @@
   }
 
   .section-padding {
-    @apply py-20 md:py-28 px-4;
+    @apply py-24 md:py-32 px-4;
   }
 }

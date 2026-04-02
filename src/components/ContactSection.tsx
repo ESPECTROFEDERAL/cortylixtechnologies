@@ -72,6 +72,7 @@ const ContactSection = () => {
               {t('sendMessage')}
             </Button>
           </form>
+          </div>
 
           <div ref={infoRef} className={`flex flex-col justify-center gap-6 sm:gap-8 transition-all duration-700 ${infoVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
             {contactInfo.map((c, i) => (

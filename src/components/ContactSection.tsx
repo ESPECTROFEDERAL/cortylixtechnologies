@@ -50,10 +50,10 @@ const ContactSection = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 max-w-5xl mx-auto">
+          <div ref={formRef} className={`transition-all duration-700 ${formVisible ? 'opacity-100 -translate-x-0' : 'opacity-0 -translate-x-12'}`}>
           <form
-            ref={formRef}
             onSubmit={handleSubmit}
-            className={`glass rounded-2xl p-6 sm:p-8 space-y-4 sm:space-y-5 transition-all duration-700 ${formVisible ? 'opacity-100 -translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            className="glass rounded-2xl p-6 sm:p-8 space-y-4 sm:space-y-5"
           >
             <div>
               <Input placeholder={t('yourName')} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-background/50 border-border/30 focus:border-secondary h-11 sm:h-12 rounded-xl" maxLength={100} />

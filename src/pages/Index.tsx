@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
+import TrustedByMarquee from '@/components/TrustedByMarquee';
 import ServicesSection from '@/components/ServicesSection';
 import PortfolioSection from '@/components/PortfolioSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
@@ -18,6 +19,7 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground">
       <Navbar onQuoteOpen={() => setQuoteOpen(true)} />
       <HeroSection onQuoteOpen={() => setQuoteOpen(true)} />
+      <TrustedByMarquee />
       <ServicesSection />
       <PortfolioSection />
       <TestimonialsSection />

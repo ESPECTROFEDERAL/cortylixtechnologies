@@ -83,7 +83,7 @@ const ContactSection = () => {
 
               <div className="pt-4 border-t border-border/20">
                 <a href="https://wa.me/255700000000" target="_blank" rel="noopener noreferrer">
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl h-12">
+                  <Button className="w-full bg-[hsl(142,70%,30%)] hover:bg-[hsl(142,70%,25%)] text-primary-foreground font-semibold rounded-xl h-12">
                     <MessageCircle className="w-5 h-5 mr-2" />
                     {t('chatWhatsApp')}
                   </Button>

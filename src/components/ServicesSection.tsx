@@ -1,72 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import ServiceBookingDialog from '@/components/ServiceBookingDialog';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { supabase } from '@/integrations/supabase/client';
 import serviceWebdev from '@/assets/service-webdev.jpg';
 import serviceSoftware from '@/assets/service-software.jpg';
 import serviceDesign from '@/assets/service-design.jpg';
 import serviceIt from '@/assets/service-it.jpg';
 
+const fallbackImages = [serviceWebdev, serviceSoftware, serviceDesign, serviceIt];
+
 const ServicesSection = () => {
   const { t } = useLanguage();
   const [bookingService, setBookingService] = useState<{ name: string; icon: React.ReactNode } | null>(null);
+  const [services, setServices] = useState<Array<{ title: string; desc: string; image: string; features: string[] }>>([]);
 
-  const services = [
-    {
-      title: t('webDev'),
-      desc: t('webDevDesc'),
-      image: serviceWebdev,
-      features: [
-        'Responsive business websites',
-        'E-commerce platforms',
-        'Progressive web applications',
-        'SEO optimization',
-        'CMS integration',
-        'Performance tuning',
-      ],
-    },
-    {
-      title: t('softwareDev'),
-      desc: t('softwareDevDesc'),
-      image: serviceSoftware,
-      features: [
-        'Custom management systems',
-        'Database design & development',
-        'API development & integration',
-        'Workflow automation',
-        'School & clinic portals',
-        'Inventory management',
-      ],
-    },
-    {
-      title: t('graphicDesign'),
-      desc: t('graphicDesignDesc'),
-      image: serviceDesign,
-      features: [
-        'Logo & brand identity design',
-        'Social media graphics',
-        'Business card & stationery',
-        'Marketing materials',
-        'UI/UX design',
-        'Brand guidelines',
-      ],
-    },
-    {
-      title: t('itSupport'),
-      desc: t('itSupportDesc'),
-      image: serviceIt,
-      features: [
-        'Hardware diagnostics & repair',
-        'Software installation & config',
-        'Network setup & troubleshooting',
-        'System performance optimization',
-        'Security audits & fixes',
-        'Remote & on-site support',
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchServices = async () => {
+      const { data } = await supabase.from('services').select('*').order('display_order');
+      if (data?.length) {
+        setServices(data.map((s, i) => ({
+          title: s.title,
+          desc: s.description,
+          image: s.image_url || fallbackImages[i % fallbackImages.length],
+          features: s.features,
+        })));
+      } else {
+        setServices([
+          { title: t('webDev'), desc: t('webDevDesc'), image: serviceWebdev, features: ['Responsive business websites', 'E-commerce platforms', 'Progressive web applications', 'SEO optimization', 'CMS integration', 'Performance tuning'] },
+          { title: t('softwareDev'), desc: t('softwareDevDesc'), image: serviceSoftware, features: ['Custom management systems', 'Database design & development', 'API development & integration', 'Workflow automation', 'School & clinic portals', 'Inventory management'] },
+          { title: t('graphicDesign'), desc: t('graphicDesignDesc'), image: serviceDesign, features: ['Logo & brand identity design', 'Social media graphics', 'Business card & stationery', 'Marketing materials', 'UI/UX design', 'Brand guidelines'] },
+          { title: t('itSupport'), desc: t('itSupportDesc'), image: serviceIt, features: ['Hardware diagnostics & repair', 'Software installation & config', 'Network setup & troubleshooting', 'System performance optimization', 'Security audits & fixes', 'Remote & on-site support'] },
+        ]);
+      }
+    };
+    fetchServices();
+  }, [t]);
 
   return (
     <>

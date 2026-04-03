@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
-import ServicesMarquee from '@/components/ServicesMarquee';
 import ServicesSection from '@/components/ServicesSection';
 import PortfolioSection from '@/components/PortfolioSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
@@ -10,6 +9,7 @@ import CTASection from '@/components/CTASection';
 import Footer from '@/components/Footer';
 import QuoteDialog from '@/components/QuoteDialog';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import AIChatButton from '@/components/AIChatButton';
 
 const Index = () => {
   const [quoteOpen, setQuoteOpen] = useState(false);
@@ -18,7 +18,6 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground">
       <Navbar onQuoteOpen={() => setQuoteOpen(true)} />
       <HeroSection onQuoteOpen={() => setQuoteOpen(true)} />
-      <ServicesMarquee />
       <ServicesSection />
       <PortfolioSection />
       <TestimonialsSection />
@@ -26,6 +25,7 @@ const Index = () => {
       <CTASection onQuoteOpen={() => setQuoteOpen(true)} />
       <Footer />
       <QuoteDialog open={quoteOpen} onOpenChange={setQuoteOpen} />
+      <AIChatButton />
       <WhatsAppButton />
     </div>
   );

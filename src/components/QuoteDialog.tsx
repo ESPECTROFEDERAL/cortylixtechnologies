@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
+import { sanitizeInput, checkRateLimit } from '@/lib/security';
 
 interface QuoteDialogProps {
   open: boolean;
@@ -32,6 +33,16 @@ const QuoteDialog = ({ open, onOpenChange }: QuoteDialogProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    if (!checkRateLimit('quote-form', 3, 5 * 60 * 1000)) {
+      toast({ title: 'Please wait', description: 'Too many submissions. Try again in a few minutes.', variant: 'destructive' });
+      return;
+    }
+    const sanitized = {
+      name: sanitizeInput(form.name),
+      email: sanitizeInput(form.email),
+      service: form.service,
+      message: sanitizeInput(form.message),
+    };
     toast({ title: 'Quote Request Sent!', description: 'We will get back to you within 24 hours.' });
     setForm({ name: '', email: '', service: '', message: '' });
     setErrors({});

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, LogOut, FolderOpen, Wrench, Upload, X, GripVertical } from 'lucide-react';
+import { validateImageFile, sanitizeInput, sanitizeUrl } from '@/lib/security';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -57,14 +58,19 @@ const AdminDashboard = () => {
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
-    const ext = file.name.split('.').pop();
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabase.storage.from('project-images').upload(path, file);
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      toast({ title: 'Invalid file', description: validationError, variant: 'destructive' });
+      return null;
+    }
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    const safeName = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from('project-images').upload(safeName, file);
     if (error) {
       toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
       return null;
     }
-    const { data: { publicUrl } } = supabase.storage.from('project-images').getPublicUrl(path);
+    const { data: { publicUrl } } = supabase.storage.from('project-images').getPublicUrl(safeName);
     return publicUrl;
   };
 
@@ -90,10 +96,10 @@ const AdminDashboard = () => {
     }
 
     const payload = {
-      title: projectForm.title,
-      description: projectForm.description,
-      tag: projectForm.tag,
-      link: projectForm.link || null,
+      title: sanitizeInput(projectForm.title),
+      description: sanitizeInput(projectForm.description),
+      tag: sanitizeInput(projectForm.tag),
+      link: projectForm.link ? sanitizeUrl(projectForm.link) : null,
       image_url: imageUrl || null,
       display_order: editingProject ? editingProject.display_order : projects.length,
     };
@@ -141,10 +147,10 @@ const AdminDashboard = () => {
       if (url) imageUrl = url;
     }
 
-    const features = serviceForm.features.split('\n').map(f => f.trim()).filter(Boolean);
+    const features = serviceForm.features.split('\n').map(f => sanitizeInput(f)).filter(Boolean);
     const payload = {
-      title: serviceForm.title,
-      description: serviceForm.description,
+      title: sanitizeInput(serviceForm.title),
+      description: sanitizeInput(serviceForm.description),
       features,
       image_url: imageUrl || null,
       display_order: editingService ? editingService.display_order : services.length,
@@ -330,7 +336,13 @@ const AdminDashboard = () => {
               <label className="flex items-center gap-2 cursor-pointer px-4 py-3 rounded-xl border border-dashed border-border/50 hover:border-secondary/50 transition-colors">
                 <Upload className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Choose image</span>
-                <input type="file" accept="image/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) setProjectImageFile(e.target.files[0]); }} />
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={(e) => {
+                  if (e.target.files?.[0]) {
+                    const err = validateImageFile(e.target.files[0]);
+                    if (err) { toast({ title: 'Invalid file', description: err, variant: 'destructive' }); return; }
+                    setProjectImageFile(e.target.files[0]);
+                  }
+                }} />
               </label>
             </div>
 
@@ -376,7 +388,13 @@ const AdminDashboard = () => {
               <label className="flex items-center gap-2 cursor-pointer px-4 py-3 rounded-xl border border-dashed border-border/50 hover:border-secondary/50 transition-colors">
                 <Upload className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Choose image</span>
-                <input type="file" accept="image/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) setServiceImageFile(e.target.files[0]); }} />
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={(e) => {
+                  if (e.target.files?.[0]) {
+                    const err = validateImageFile(e.target.files[0]);
+                    if (err) { toast({ title: 'Invalid file', description: err, variant: 'destructive' }); return; }
+                    setServiceImageFile(e.target.files[0]);
+                  }
+                }} />
               </label>
             </div>
 

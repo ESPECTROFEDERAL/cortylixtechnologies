@@ -58,14 +58,19 @@ const AdminDashboard = () => {
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
-    const ext = file.name.split('.').pop();
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabase.storage.from('project-images').upload(path, file);
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      toast({ title: 'Invalid file', description: validationError, variant: 'destructive' });
+      return null;
+    }
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    const safeName = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from('project-images').upload(safeName, file);
     if (error) {
       toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
       return null;
     }
-    const { data: { publicUrl } } = supabase.storage.from('project-images').getPublicUrl(path);
+    const { data: { publicUrl } } = supabase.storage.from('project-images').getPublicUrl(safeName);
     return publicUrl;
   };
 

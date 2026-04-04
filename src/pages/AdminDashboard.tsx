@@ -388,7 +388,13 @@ const AdminDashboard = () => {
               <label className="flex items-center gap-2 cursor-pointer px-4 py-3 rounded-xl border border-dashed border-border/50 hover:border-secondary/50 transition-colors">
                 <Upload className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Choose image</span>
-                <input type="file" accept="image/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) setServiceImageFile(e.target.files[0]); }} />
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={(e) => {
+                  if (e.target.files?.[0]) {
+                    const err = validateImageFile(e.target.files[0]);
+                    if (err) { toast({ title: 'Invalid file', description: err, variant: 'destructive' }); return; }
+                    setServiceImageFile(e.target.files[0]);
+                  }
+                }} />
               </label>
             </div>
 

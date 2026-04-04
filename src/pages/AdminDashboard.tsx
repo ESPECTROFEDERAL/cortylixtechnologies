@@ -96,10 +96,10 @@ const AdminDashboard = () => {
     }
 
     const payload = {
-      title: projectForm.title,
-      description: projectForm.description,
-      tag: projectForm.tag,
-      link: projectForm.link || null,
+      title: sanitizeInput(projectForm.title),
+      description: sanitizeInput(projectForm.description),
+      tag: sanitizeInput(projectForm.tag),
+      link: projectForm.link ? sanitizeUrl(projectForm.link) : null,
       image_url: imageUrl || null,
       display_order: editingProject ? editingProject.display_order : projects.length,
     };

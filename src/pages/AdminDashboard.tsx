@@ -147,10 +147,10 @@ const AdminDashboard = () => {
       if (url) imageUrl = url;
     }
 
-    const features = serviceForm.features.split('\n').map(f => f.trim()).filter(Boolean);
+    const features = serviceForm.features.split('\n').map(f => sanitizeInput(f)).filter(Boolean);
     const payload = {
-      title: serviceForm.title,
-      description: serviceForm.description,
+      title: sanitizeInput(serviceForm.title),
+      description: sanitizeInput(serviceForm.description),
       features,
       image_url: imageUrl || null,
       display_order: editingService ? editingService.display_order : services.length,

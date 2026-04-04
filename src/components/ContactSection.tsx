@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { sanitizeInput, checkRateLimit } from '@/lib/security';
 
 const ContactSection = () => {
   const { t } = useLanguage();

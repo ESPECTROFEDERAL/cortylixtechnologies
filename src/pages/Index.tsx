@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
-import TrustedByMarquee from '@/components/TrustedByMarquee';
-import ServicesSection from '@/components/ServicesSection';
+import WhyChooseUs from '@/components/WhyChooseUs';
+import ServicesGrid from '@/components/ServicesGrid';
 import PortfolioSection from '@/components/PortfolioSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import ContactSection from '@/components/ContactSection';
@@ -19,8 +19,8 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground">
       <Navbar onQuoteOpen={() => setQuoteOpen(true)} />
       <HeroSection onQuoteOpen={() => setQuoteOpen(true)} />
-      <TrustedByMarquee />
-      <ServicesSection />
+      <WhyChooseUs />
+      <ServicesGrid />
       <PortfolioSection />
       <TestimonialsSection />
       <ContactSection />

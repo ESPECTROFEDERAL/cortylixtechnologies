@@ -19,8 +19,8 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground">
       <Navbar onQuoteOpen={() => setQuoteOpen(true)} />
       <HeroSection onQuoteOpen={() => setQuoteOpen(true)} />
-      <TrustedByMarquee />
-      <ServicesSection />
+      <WhyChooseUs />
+      <ServicesGrid />
       <PortfolioSection />
       <TestimonialsSection />
       <ContactSection />

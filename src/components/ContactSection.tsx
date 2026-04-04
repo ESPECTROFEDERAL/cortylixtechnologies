@@ -29,6 +29,15 @@ const ContactSection = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    if (!checkRateLimit('contact-form', 3, 5 * 60 * 1000)) {
+      toast({ title: 'Please wait', description: 'Too many submissions. Try again in a few minutes.', variant: 'destructive' });
+      return;
+    }
+    const sanitized = {
+      name: sanitizeInput(form.name),
+      email: sanitizeInput(form.email),
+      message: sanitizeInput(form.message),
+    };
     toast({ title: 'Message Sent!', description: 'We will get back to you within 24 hours.' });
     setForm({ name: '', email: '', message: '' });
     setErrors({});

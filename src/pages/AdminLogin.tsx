@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Lock, Mail } from 'lucide-react';
+import { checkRateLimit, getRateLimitRemainingTime } from '@/lib/security';
 
 const AdminLogin = () => {
   const { signIn } = useAuth();
@@ -16,6 +17,13 @@ const AdminLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!checkRateLimit('admin-login', 5, 15 * 60 * 1000)) {
+      const remaining = getRateLimitRemainingTime('admin-login');
+      setError(`Too many login attempts. Please try again in ${Math.ceil(remaining / 60)} minutes.`);
+      return;
+    }
+
     setLoading(true);
     const { error: signInError } = await signIn(email, password);
     if (signInError) {

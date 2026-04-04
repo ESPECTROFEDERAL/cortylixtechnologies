@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Pencil, Trash2, LogOut, FolderOpen, Wrench, Upload, X, GripVertical } from 'lucide-react';
+import { validateImageFile, sanitizeInput, sanitizeUrl } from '@/lib/security';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { Tables } from '@/integrations/supabase/types';
 
